@@ -1,15 +1,19 @@
 import streamlit as st
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import json
 import datetime
 
 # =========================
 # GOOGLE SHEETS CONNECTION
 # =========================
+
+# Load JSON creds from Streamlit secrets (no need for local file)
+service_account_info = json.loads(st.secrets["SERVICE_ACCOUNT_JSON"])
+
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# Use your local service_account.json file
-creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", SCOPE)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, SCOPE)
 client = gspread.authorize(creds)
 
 # Open your Google Sheet by name
